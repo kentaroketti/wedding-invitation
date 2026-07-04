@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adam & Hawa — Walimatul Urus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap');
+
+  :root{
+    --ivory:#F6F5F1;
+    --pewter:#BFC3C6;
+    --pewter-light:#E4E5E2;
+    --ink:#2A2D35;
+    --ink-soft:#5B5E66;
+    --rosegold:#B08A6E;
+    --rosegold-dark:#8E6C54;
+    --plum:#332C38;
+    --line:#AD8B63;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .serif{ font-family:'Cormorant Garamond', serif; }
+
+  .label{
+    font-family:'Jost', sans-serif;
+    font-size:12px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--rosegold-dark);
+    font-weight:500;
+  }
+
+  /* ---------- ENVELOPE COVER ---------- */
+  #envelope-cover{
+    position:fixed;
+    inset:0;
+    z-index:999;
+    background:var(--plum);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 1s cubic-bezier(.65,0,.35,1), opacity .9s ease;
+    overflow:hidden;
+  }
+  #envelope-cover.opened{
+    transform:translateY(-100%);
+    opacity:0.4;
+    pointer-events:none;
+  }
+  .env-wrap{
+    text-align:center;
+    color:var(--ivory);
+    padding:20px;
+  }
+  .env-seal{
+    width:92px; height:92px;
+    border-radius:50%;
+    border:1px solid var(--rosegold);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 28px;
+    cursor:pointer;
+    background:rgba(176,138,110,0.08);
+    transition:transform .35s ease, background .35s ease;
+  }
+  .env-seal:hover{ transform:scale(1.06); background:rgba(176,138,110,0.16); }
+  .env-seal span{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:30px;
+    color:var(--rosegold);
+  }
+  .env-flap{
+    width:1px; height:60px; background:var(--rosegold);
+    margin:0 auto 22px; opacity:0.6;
+  }
+  .env-names{
+    font-family:'Cormorant Garamond', serif;
+    font-size:34px;
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .env-tap{
+    font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--pewter); margin-top:26px;
+  }
+
+  /* ---------- CONTENT ---------- */
+  .page{ max-width:520px; margin:0 auto; }
+
+  section{ padding:72px 28px; position:relative; }
+
+  .ornament{ display:block; margin:0 auto; opacity:0.85; }
+
+  .hero{ text-align:center; }
+  .hero .label{ display:block; margin-bottom:22px; }
+  .hero h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:58px;
+    line-height:1.15;
+    color:var(--ink);
+  }
+  .hero .amp{
+    display:block;
+    font-size:28px;
+    color:var(--rosegold-dark);
+    margin:6px 0;
+    font-style:normal;
+  }
+  .hero .date-line{
+    margin-top:26px;
+    font-size:15px;
+    letter-spacing:1px;
+    color:var(--ink-soft);
+  }
+
+  .divider{ display:flex; align-items:center; gap:14px; margin:36px 0; }
+  .divider .rule{ flex:1; height:1px; background:var(--pewter); }
+  .divider .mark{ width:6px; height:6px; border:1px solid var(--rosegold); transform:rotate(45deg); }
+
+  /* countdown */
+  .countdown{ display:flex; justify-content:center; gap:14px; text-align:center; }
+  .cd-box{
+    background:#fff;
+    border:1px solid var(--pewter-light);
+    border-radius:2px;
+    padding:16px 8px;
+    min-width:66px;
+  }
+  .cd-num{ font-family:'Cormorant Garamond', serif; font-size:30px; color:var(--ink); font-weight:600; line-height:1;}
+  .cd-unit{ font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-top:6px; display:block;}
+
+  /* details */
+  .details{ text-align:center; }
+  .detail-row{ margin-bottom:30px; }
+  .detail-row .label{ margin-bottom:6px; }
+  .detail-row .value{ font-family:'Cormorant Garamond', serif; font-size:22px; color:var(--ink); }
+  .detail-row .sub{ font-size:13px; color:var(--ink-soft); margin-top:3px; }
+
+  .btn-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:22px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px;
+    border:1px solid var(--ink);
+    color:var(--ink);
+    text-decoration:none;
+    font-size:12px; letter-spacing:1.5px; text-transform:uppercase;
+    background:transparent;
+    cursor:pointer;
+    transition:background .25s, color .25s;
+  }
+  .btn:hover{ background:var(--ink); color:var(--ivory); }
+  .btn.primary{ background:var(--rosegold-dark); color:#fff; border-color:var(--rosegold-dark); }
+  .btn.primary:hover{ background:var(--ink); border-color:var(--ink); }
+
+  /* rsvp */
+  .rsvp-form{ display:flex; flex-direction:column; gap:16px; margin-top:30px; }
+  .rsvp-form input, .rsvp-form select, .rsvp-form textarea{
+    font-family:'Jost', sans-serif;
+    font-size:14px;
+    padding:12px 14px;
+    border:1px solid var(--pewter);
+    background:#fff;
+    color:var(--ink);
+    border-radius:2px;
+    width:100%;
+  }
+  .rsvp-form textarea{ resize:vertical; min-height:70px; }
+  .rsvp-form label{ font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px; display:block; }
+  .rsvp-status{ font-size:13px; text-align:center; margin-top:14px; color:var(--rosegold-dark); min-height:18px; }
+
+  .wishes{ margin-top:36px; display:flex; flex-direction:column; gap:14px; }
+  .wish-card{
+    background:#fff; border:1px solid var(--pewter-light);
+    padding:14px 16px; border-radius:2px; text-align:left;
+  }
+  .wish-name{ font-size:12px; letter-spacing:1px; color:var(--rosegold-dark); text-transform:uppercase; margin-bottom:4px;}
+  .wish-msg{ font-size:14px; color:var(--ink); font-style:italic; font-family:'Cormorant Garamond', serif; }
+
+  footer{ text-align:center; padding:50px 20px 90px; }
+  footer .serif{ font-size:20px; font-style:italic; color:var(--ink-soft); }
+
+  /* music toggle */
+  #music-toggle{
+    position:fixed; bottom:22px; right:22px; z-index:500;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--ink); color:var(--ivory);
+    border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.25);
+  }
+  #music-toggle svg{ width:18px; height:18px; }
+  #music-toggle.paused svg{ opacity:0.5; }
+
+  @media (max-width:420px){
+    .hero h1{ font-size:44px; }
+    .cd-box{ min-width:56px; padding:12px 6px; }
+    .cd-num{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== EDITABLE CONFIG ========== -->
+<script>
+  const CONFIG = {
+    groom: "Muiz",
+    bride: "Yasirah",
+    eventTitle: "Walimatul Urus",
+    // ISO date-time for the event, used for countdown + calendar link
+    eventDateISO: "2026-10-25T12:00:00",
+    dateDisplay: "Sunday, 25 October 2026",
+    timeDisplay: "12:00 PM – 4:00 PM",
+    venueName: "SJ Campus Tower 8",
+    venueAddress: "38 Cleantech Loop",
+    mapsQuery: "SJ Campus Tower 8, 38 Cleantech Loop",
+    // Leave musicSrc empty ("") to hide the music button, or paste a hosted mp3 URL
+    musicSrc: "",
+    // Paste your Google Apps Script Web App URL here to send RSVPs to a Google Sheet.
+    // Leave empty ("") to skip Google Sheets and only keep RSVPs in the on-page storage.
+    sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbzfHSKHpEroJxq4FDKm9u4qmUeg8AXrpZMeWTX9vtCA5ozhIpKE6pWz5sX8rS2CjWHowA/exec"
+  };
+</script>
+<!-- ====================================== -->
+
+<div id="envelope-cover">
+  <div class="env-wrap">
+    <p class="label" style="color:var(--pewter)">You're invited</p>
+    <div class="env-flap"></div>
+    <div class="env-seal" id="openSeal"><span>M&Y</span></div>
+    <p class="env-names serif" id="envNames">Adam &amp; Hawa</p>
+    <p class="env-tap">Tap the seal to open</p>
+  </div>
+</div>
+
+<div class="page">
+
+  <section class="hero">
+    <span class="label" id="heroLabel">Walimatul Urus</span>
+    <h1 class="serif">
+      <span id="heroGroom">Adam</span>
+      <span class="amp">&amp;</span>
+      <span id="heroBride">Hawa</span>
+    </h1>
+    <p class="date-line" id="heroDate">Tuesday, 4 August 2026</p>
+    <svg class="ornament" width="120" height="28" viewBox="0 0 120 28" style="margin-top:28px;">
+      <path d="M0 14 H45" stroke="#AD8B63" stroke-width="1"/>
+      <path d="M75 14 H120" stroke="#AD8B63" stroke-width="1"/>
+      <circle cx="60" cy="14" r="4" fill="none" stroke="#AD8B63" stroke-width="1"/>
+      <path d="M50 14 C55 6, 65 6, 70 14" stroke="#AD8B63" stroke-width="1" fill="none"/>
+      <path d="M50 14 C55 22, 65 22, 70 14" stroke="#AD8B63" stroke-width="1" fill="none"/>
+    </svg>
+  </section>
+
+  <section>
+    <p class="label" style="text-align:center; margin-bottom:22px;">Counting down to the big day</p>
+    <div class="countdown">
+      <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-unit">Days</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-unit">Hrs</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-mins">00</span><span class="cd-unit">Min</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-secs">00</span><span class="cd-unit">Sec</span></div>
+    </div>
+  </section>
+
+  <section class="details">
+    <div class="detail-row">
+      <p class="label">Date &amp; time</p>
+      <p class="value serif" id="detDate">Tuesday, 4 August 2026</p>
+      <p class="sub" id="detTime">12:00 PM – 4:00 PM</p>
+    </div>
+    <div class="detail-row">
+      <p class="label">Venue</p>
+      <p class="value serif" id="detVenue">Dewan Seri Melur</p>
+      <p class="sub" id="detAddress">Jalan Kenanga, 43000 Kajang, Selangor</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn primary" id="mapBtn" href="#" target="_blank" rel="noopener">Open in Maps</a>
+      <button class="btn" id="calBtn">Add to Calendar</button>
+    </div>
+  </section>
+
+  <section id="rsvp">
+    <p class="label" style="text-align:center;">RSVP</p>
+    <p class="serif" style="text-align:center; font-size:22px; margin-top:10px;">Kindly reply by 20 July 2026</p>
+    <form class="rsvp-form" id="rsvpForm">
+      <div>
+        <label for="rName">Full name</label>
+        <input type="text" id="rName" placeholder="Your name" required>
+      </div>
+      <div>
+        <label for="rAttend">Will you be attending?</label>
+        <select id="rAttend" required>
+          <option value="Yes">Joyfully attending</option>
+          <option value="No">Unable to attend</option>
+        </select>
+      </div>
+      <div>
+        <label for="rPax">Number of guests (including yourself)</label>
+        <input type="number" id="rPax" min="1" max="10" value="1">
+      </div>
+      <div>
+        <label for="rMsg">Message for the couple (optional)</label>
+        <textarea id="rMsg" placeholder="Wishing you a lifetime of happiness..."></textarea>
+      </div>
+      <button type="submit" class="btn primary" style="justify-content:center;">Send RSVP</button>
+      <p class="rsvp-status" id="rsvpStatus"></p>
+    </form>
+
+    <div class="wishes" id="wishesList"></div>
+  </section>
+
+  <footer>
+    <p class="serif">With love,</p>
+    <p class="serif" style="margin-top:6px;" id="footNames">Adam &amp; Hawa</p>
+  </footer>
+</div>
+
+<button id="music-toggle" class="paused" style="display:none;" aria-label="Toggle music">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+</button>
+<audio id="bgAudio" loop></audio>
+
+<script>
+(function(){
+  // ---- populate text from CONFIG ----
+  document.title = CONFIG.groom + " & " + CONFIG.bride + " — " + CONFIG.eventTitle;
+  document.getElementById('envNames').innerHTML = CONFIG.groom + " &amp; " + CONFIG.bride;
+  document.getElementById('heroLabel').textContent = CONFIG.eventTitle;
+  document.getElementById('heroGroom').textContent = CONFIG.groom;
+  document.getElementById('heroBride').textContent = CONFIG.bride;
+  document.getElementById('heroDate').textContent = CONFIG.dateDisplay;
+  document.getElementById('detDate').textContent = CONFIG.dateDisplay;
+  document.getElementById('detTime').textContent = CONFIG.timeDisplay;
+  document.getElementById('detVenue').textContent = CONFIG.venueName;
+  document.getElementById('detAddress').textContent = CONFIG.venueAddress;
+  document.getElementById('footNames').innerHTML = CONFIG.groom + " &amp; " + CONFIG.bride;
+  document.getElementById('mapBtn').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(CONFIG.mapsQuery);
+
+  // ---- envelope open ----
+  const cover = document.getElementById('envelope-cover');
+  document.getElementById('openSeal').addEventListener('click', function(){
+    cover.classList.add('opened');
+    const audio = document.getElementById('bgAudio');
+    if(CONFIG.musicSrc){
+      audio.play().then(function(){
+        document.getElementById('music-toggle').classList.remove('paused');
+      }).catch(function(){});
+    }
+    setTimeout(function(){ cover.style.display='none'; }, 1100);
+  });
+
+  // ---- countdown ----
+  const target = new Date(CONFIG.eventDateISO).getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = target - now;
+    if(diff < 0) diff = 0;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff % 86400000 / 3600000);
+    const m = Math.floor(diff % 3600000 / 60000);
+    const s = Math.floor(diff % 60000 / 1000);
+    document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- add to calendar (.ics) ----
+  document.getElementById('calBtn').addEventListener('click', function(){
+    const start = new Date(CONFIG.eventDateISO);
+    const end = new Date(start.getTime() + 4*3600000);
+    function fmt(dt){
+      return dt.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+    }
+    const ics = [
+      'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+      'SUMMARY:' + CONFIG.eventTitle + ' - ' + CONFIG.groom + ' & ' + CONFIG.bride,
+      'DTSTART:' + fmt(start),
+      'DTEND:' + fmt(end),
+      'LOCATION:' + CONFIG.venueName + ', ' + CONFIG.venueAddress,
+      'DESCRIPTION:You are invited to the wedding of ' + CONFIG.groom + ' and ' + CONFIG.bride,
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], {type:'text/calendar'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wedding-invite.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // ---- music toggle ----
+  const musicBtn = document.getElementById('music-toggle');
+  const audio = document.getElementById('bgAudio');
+  if(CONFIG.musicSrc){
+    audio.src = CONFIG.musicSrc;
+    musicBtn.style.display = 'flex';
+    musicBtn.addEventListener('click', function(){
+      if(audio.paused){
+        audio.play().then(function(){ musicBtn.classList.remove('paused'); }).catch(function(){});
+      } else {
+        audio.pause();
+        musicBtn.classList.add('paused');
+      }
+    });
+  }
+
+  // ---- RSVP (persisted, shared so the couple can see all responses) ----
+  const form = document.getElementById('rsvpForm');
+  const status = document.getElementById('rsvpStatus');
+  const wishesList = document.getElementById('wishesList');
+
+  async function loadWishes(){
+    if(!CONFIG.sheetWebAppUrl) return;
+    try{
+      const res = await fetch(CONFIG.sheetWebAppUrl);
+      if(!res.ok) return;
+      const wishes = await res.json();
+      wishesList.innerHTML = '';
+      wishes.forEach(function(data){
+        const card = document.createElement('div');
+        card.className = 'wish-card';
+        card.innerHTML = '<div class="wish-name">' + escapeHtml(data.name) + '</div><div class="wish-msg">"' + escapeHtml(data.message) + '"</div>';
+        wishesList.appendChild(card);
+      });
+    }catch(e){}
+  }
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+  }
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const name = document.getElementById('rName').value.trim();
+    const attend = document.getElementById('rAttend').value;
+    const pax = document.getElementById('rPax').value;
+    const message = document.getElementById('rMsg').value.trim();
+    if(!name){ return; }
+    const payload = { name, attend, pax, message, ts: new Date().toISOString() };
+    status.textContent = 'Sending...';
+
+    if(!CONFIG.sheetWebAppUrl){
+      status.textContent = 'RSVP form is not connected yet. Please contact the couple directly.';
+      return;
+    }
+
+    try{
+      // Apps Script often blocks the browser from reading the response
+      // (CORS), even though the row is saved successfully server-side.
+      // So we fire the request and don't gate the success message on it.
+      fetch(CONFIG.sheetWebAppUrl, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){});
+      status.textContent = attend === 'Yes'
+        ? 'Thank you, ' + name + '! We can\'t wait to celebrate with you.'
+        : 'Thank you for letting us know, ' + name + '. You\'ll be missed.';
+      form.reset();
+      loadWishes();
+    }catch(err){
+      status.textContent = 'Something went wrong. Please try again.';
+    }
+  });
+
+  loadWishes();
+})();
+</script>
+
+</body>
+</html>
